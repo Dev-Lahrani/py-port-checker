@@ -1,4 +1,31 @@
-#!/usr/bin/env python3
+print(help_text)
+    
+    def scan_remote_host(self, host: str, port: Optional[str] = None):
+        """Scan ports on a remote host"""
+        print(f"🌐 Scanning {host}...")
+        
+        ports_to_scan = [port] if port else ['22', '80', '443', '21', '25', '53', '110', '143', '993', '995', '3389']
+        open_ports = []
+        
+        for p in ports_to_scan:
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(2)
+                result = sock.connect_ex((host, int(p)))
+                sock.close()
+                
+                if result == 0:
+                    open_ports.append(p)
+                    print(f"✅ Port {p} - OPEN")
+                elif port:  # Only show closed if scanning specific port
+                    print(f"❌ Port {p} - CLOSED")
+            except (socket.gaierror, ValueError):
+                print(f"❌ Error scanning port {p}")
+        
+        if not port:  # Summary for multiple ports
+            print(f"\n📊 Found {len(open_ports)} open ports on {host}")
+            if open_ports:
+                print(f"Open ports: {', '.join(open_ports)}")#!/usr/bin/env python3
 import subprocess
 import socket
 import sys
